@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section>
+  <article>
+    <h1>All Reservations</h1>
+    <div class="row">
+      <div class="column">
+        <h2>Reservations:</h2>
+        <div id="bookings"></div>
+      </div>
+      <div class="column">
+        <div class="videowrap">
+          <iframe src="https://www.google.com/maps/embed?pb=..." width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+<script>
+  fetch("{% url 'bookings' %}")
+    .then(response => response.json())
+    .then(data => {
+      let bookingsHTML = '';
+      if (data.length === 0) {
+        bookingsHTML = 'No bookings available.';
+      } else {
+        data.forEach(booking => {
+          bookingsHTML += `<div class="booking">
+                             <p>Name: ${booking.fields.first_name}</p>
+                             <p>Date: ${booking.fields.reservation_date}</p>
+                             <p>Time: ${booking.fields.reservation_slot}</p>
+                           </div>`;
+        });
+      }
+      document.getElementById('bookings').innerHTML = bookingsHTML;
+    });
+</script>
+{% endblock %}
